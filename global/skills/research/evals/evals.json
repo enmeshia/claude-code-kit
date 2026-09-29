@@ -1,0 +1,51 @@
+{
+  "skill_name": "research",
+  "evals": [
+    {
+      "id": 0,
+      "name": "search-engine-compare",
+      "prompt": "research for me whats the best way to add full text search to our shop. next.js + postgres 16 on one hetzner VPS (CX32), ~40k products, need typo tolerance and filters by category/price. compare postgres FTS (maybe pg_trgm), meilisearch and typesense, include what hosting would cost us and any license gotchas",
+      "expected_output": "One combined doc in <project>/.claude/research/23-09-2026-<slug>.md, fields split by option with a shared criteria list, answer first, comparison table, sources",
+      "files": [
+        "outputs/project/package.json"
+      ],
+      "assertions": [
+        "Exactly one doc, saved in project/.claude/research/ with a name matching DD-MM-YYYY-<slug>.md (23-09-2026-...)",
+        "subagent-prompts.md holds 2-5 sub-agent prompts with non-overlapping fields",
+        "Every sub-agent prompt carries the same criteria list with units",
+        "Every sub-agent prompt passes KNOWN FACTS taken from the project (Next 15.3.2, Postgres 16, CX32, ~40k products)",
+        "Doc has one comparison table covering Postgres FTS, Meilisearch and Typesense",
+        "Doc gives hosting cost figures with a currency and a source",
+        "Doc states the license of each option (Meilisearch MIT, Typesense GPL-3.0, Postgres license)",
+        "The doc opens with an Answer section (2-5 lines, with a confidence level) right after the header",
+        "Factual claims carry numbered source refs [n] and the doc ends with a Sources list with URLs",
+        "Has an Open questions section and each item says how to find out",
+        "No em dashes anywhere in the doc(s) (global CLAUDE.md writing rule)",
+        "reply.md is 12 lines or fewer and names the doc path(s)"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "two-topics-local-rules",
+      "prompt": "can you research two things before next sprint: how other indie devs handle steam cloud save conflicts in unity games, and separately what the current rules are for age ratings (IARC) if we launch on switch and android. we're a 2 person studio",
+      "expected_output": "Two separate docs (unrelated topics), saved in <project>/docs/research/ with YYYY-MM-DD names because the project CLAUDE.md overrides the global default",
+      "files": [
+        "outputs/project/CLAUDE.md"
+      ],
+      "assertions": [
+        "Two separate docs, one per topic (Steam cloud saves, IARC ratings)",
+        "Docs saved in project/docs/research/, not in .claude/research/ (project CLAUDE.md wins)",
+        "Doc names use the project's ISO format YYYY-MM-DD-topic.md (2026-09-23-...)",
+        "subagent-prompts.md holds 2 sub-agent prompts, each with a NOT YOURS boundary naming the other topic",
+        "Each doc stands alone with its own Answer section and links the other doc by relative path",
+        "IARC doc covers both Nintendo Switch (eShop) and Google Play, with sources",
+        "Steam doc covers Steam Auto-Cloud vs the Steamworks Remote Storage API and how conflicts are shown/resolved",
+        "The doc opens with an Answer section (2-5 lines, with a confidence level) right after the header",
+        "Factual claims carry numbered source refs [n] and the doc ends with a Sources list with URLs",
+        "Has an Open questions section and each item says how to find out",
+        "No em dashes anywhere in the doc(s) (global CLAUDE.md writing rule)",
+        "reply.md is 12 lines or fewer and names the doc path(s)"
+      ]
+    }
+  ]
+}

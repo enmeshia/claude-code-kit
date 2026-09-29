@@ -1,0 +1,71 @@
+{
+  "skill_name": "phased-plan",
+  "evals": [
+    {
+      "id": 0,
+      "name": "offline-sync-electron",
+      "prompt": "I want to add a proper offline mode to my Electron notes app (React + SQLite through better-sqlite3, syncs to a Rails backend). Conflict resolution, a sync queue, the lot. Create a very detailed plan with distinct phases for this task - this plan should be ready for orcestrator and sub-agents execution, meaning an orchestrator fires sub-agent to execute a phase, one at a time. This is needed so that a main plan execution session won't blow up on context tokens size",
+      "expected_output": "A phased plan document, explicitly orchestrator-ready",
+      "files": [],
+      "assertions": [
+        "Contains a phase map table listing every phase with a named test or verification scenario",
+        "States explicitly that the orchestrator does not read source files, only the plan, the handoff and the reports",
+        "Contains a reusable sub-agent prompt template with fill-in placeholders, not just prose about firing agents",
+        "Names a specific handoff log file path and says what each phase appends to it",
+        "The first phase measures unknowns or proves the risky mechanism, instead of building a user-facing feature",
+        "Every phase section has a Reads list naming specific files to open",
+        "Every phase has a Done-when tied to a runnable command or named test, with at least one numeric or countable assertion",
+        "Tells sub-agents to stop and report rather than widen scope when a check keeps failing",
+        "Tells the orchestrator to run one sub-agent at a time and keep every phase green before starting the next",
+        "The cross-cutting constraints appear both at the top of the plan and inside the sub-agent prompt template",
+        "The last phase writes the docs through a sub-agent, and a separate fresh agent checks them against the handoff log and the code before the plan is closed",
+        "The sub-agent prompt says the reply only summarizes the handoff entry, with nothing in the reply that is not in the log",
+        "Conflict resolution is specified concretely, naming a strategy and its tie-breakers, not left as 'handle conflicts'"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "dagster-migration",
+      "prompt": "we need to move our python data pipeline off airflow onto dagster. ~30 dags, a bunch with custom operators, and two of them feed a dashboard that cannot go down. write me an implementation plan, i'll be running this over a few days with claude doing most of the actual work",
+      "expected_output": "A phased plan document. Orchestration not requested by name, so this tests whether the skill's structure shows up anyway",
+      "files": [],
+      "assertions": [
+        "Contains a phase map table listing every phase with a named test or verification scenario",
+        "States explicitly that the orchestrator does not read source files, only the plan, the handoff and the reports",
+        "Contains a reusable sub-agent prompt template with fill-in placeholders, not just prose about firing agents",
+        "Names a specific handoff log file path and says what each phase appends to it",
+        "The first phase measures unknowns or proves the risky mechanism, instead of building a user-facing feature",
+        "Every phase section has a Reads list naming specific files to open",
+        "Every phase has a Done-when tied to a runnable command or named test, with at least one numeric or countable assertion",
+        "Tells sub-agents to stop and report rather than widen scope when a check keeps failing",
+        "Tells the orchestrator to run one sub-agent at a time and keep every phase green before starting the next",
+        "The cross-cutting constraints appear both at the top of the plan and inside the sub-agent prompt template",
+        "The last phase writes the docs through a sub-agent, and a separate fresh agent checks them against the handoff log and the code before the plan is closed",
+        "The sub-agent prompt says the reply only summarizes the handoff entry, with nothing in the reply that is not in the log",
+        "Treats the two dashboard-feeding dags as a hard constraint and says how they stay up during the migration"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "playwright-checkout",
+      "prompt": "plan out a browser automation test suite for our checkout flow (playwright, next.js storefront, stripe test mode). i want it planned in stages because it's going to be big and i don't want one giant session doing it all. our staging env is shared with the design team so it's not exactly quiet",
+      "expected_output": "A phased plan document that deals with the shared, noisy test environment",
+      "files": [],
+      "assertions": [
+        "Contains a phase map table listing every phase with a named test or verification scenario",
+        "States explicitly that the orchestrator does not read source files, only the plan, the handoff and the reports",
+        "Contains a reusable sub-agent prompt template with fill-in placeholders, not just prose about firing agents",
+        "Names a specific handoff log file path and says what each phase appends to it",
+        "The first phase measures unknowns or proves the risky mechanism, instead of building a user-facing feature",
+        "Every phase section has a Reads list naming specific files to open",
+        "Every phase has a Done-when tied to a runnable command or named test, with at least one numeric or countable assertion",
+        "Tells sub-agents to stop and report rather than widen scope when a check keeps failing",
+        "Tells the orchestrator to run one sub-agent at a time and keep every phase green before starting the next",
+        "The cross-cutting constraints appear both at the top of the plan and inside the sub-agent prompt template",
+        "The last phase writes the docs through a sub-agent, and a separate fresh agent checks them against the handoff log and the code before the plan is closed",
+        "The sub-agent prompt says the reply only summarizes the handoff entry, with nothing in the reply that is not in the log",
+        "Deals with the shared, noisy staging environment with a concrete determinism measure placed early in the plan"
+      ]
+    }
+  ]
+}
