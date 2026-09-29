@@ -180,7 +180,10 @@ flowchart TD
 ```
 
 Product docs keep **Decided**, **Ideas** and **Open questions** apart, and only you move
-something into Decided. A session that reads an idea as a spec builds the wrong thing.
+something into Decided. Your answers to open questions are recorded as leanings until you call a
+point decided. A session that reads an idea as a spec builds the wrong thing.
+
+Docs follow the change: when a change makes a doc, rule or skill wrong, the same change fixes it.
 
 ### The guide checks itself
 

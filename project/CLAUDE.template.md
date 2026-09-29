@@ -82,12 +82,15 @@ existing one on the topic and extend it.
 - Each docs area has a `README.md` that lists its docs and says how they are written. Read it
   before you create or edit a doc in that area, and add every new doc to its list.
 - **Product design belongs to the owner.** Propose design decisions in your reply. Never write one
-  into a doc as settled until the owner agrees.
+  into a doc as settled until the owner agrees. The owner's answers to open questions are leanings
+  until they call a point decided (`.claude/docs/product/README.md`).
 
 ## Done means
 
 - {{The checks every change passes. Example: "`npm run build` and `npm run lint` are clean, and all
   tests pass."}} The feature's own check ran.
+- **Docs follow the change.** If the change makes a doc, rule, skill or line of this file wrong,
+  fix it in the same change. A new fact or reason goes to its home in the Knowledge table above.
 - **Screenshots are read, not counted.** A visual check is done only when you opened the image and
   said what it shows.
 - **Feel is not tested.** For UI, animation or anything the owner judges by eye, show the owner a
