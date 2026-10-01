@@ -120,8 +120,8 @@ twelve lines and saves every later phase from a hunt.
 The plan carries its own execution instructions, so a fresh session can run it without you
 explaining anything. Copy these four pieces from `references/plan-template.md`:
 
-1. **The loop.** Read the handoff log, find the first phase not done, fire one sub-agent, read the
-   report, move on or stop.
+1. **The loop.** Find the first phase not done from the log's headings, read only its last entry,
+   fire one sub-agent, read the report, move on or stop.
 2. **The sub-agent prompt template**, verbatim and fill-in-the-blanks, so the orchestrator does not
    improvise a new prompt thirteen times.
 3. **The docs check prompt**, for the fresh agent that checks the docs at the end.
@@ -179,6 +179,12 @@ run that was made.
 
 ## Docs get a check, like code
 
+**Living docs get what is true now; the run stays in the log.** Docs that sessions read to work
+(the agent guide, rules, skills, design and tech docs) get how the thing works, the rules and the
+known gaps. The run's numbers and story stay in the log, and the plan keeps "What the plan got
+wrong". If the project keeps a history index, add one entry that links them. A "test record" copied
+into a living doc is read by every later session and repeats the log.
+
 Most plans end by writing things down: the project's docs, the "what the plan got wrong" table, a
 handoff for the next piece of work. Code has a test that can disagree with it. Docs have nothing,
 and they are written at the end, when the orchestrator's context is at its largest. That is where
@@ -191,7 +197,9 @@ So the last phase writes the docs and has them checked:
    handoff log, the plan, the code and data files. Not the orchestrator's memory of the run.
 2. **A fresh sub-agent checks them and edits nothing.** It gets the changed files and the same
    sources, and checks every number, name, path and claim against them. It also looks for gaps a
-   reader would trip on, for proposals written as decisions, and for the project's writing rules.
+   reader would trip on, for proposals written as decisions, for run records, dated story or
+   superseded values in living docs, for a fact now written in two living docs, and for the
+   project's writing rules.
    It replies with a list: file and line, what it says, what the source says, the fix.
 3. **The writer fixes the list**, then a second check covers the fixes and anything new. After two
    rounds, stop and show the leftovers to the user instead of looping.
