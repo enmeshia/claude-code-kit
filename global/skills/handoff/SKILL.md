@@ -14,7 +14,9 @@ prompt. Fill it in.
 
 Save it in the project's `.claude/handoff/` folder (project root is the git root, else the working directory). Create the folder if it is missing. Never save it in the OS temp folder or the scratchpad. Name the file `DD-MM-YYYY-<short-slug>.md`, day first, e.g. `23-09-2026-search-migration-handoff.md`. If there is no project folder (a chat with no files), give the document in the reply instead.
 
-When the handed-off task is finished, mark the handoff done: add `> **Status: DONE (DD-MM-YYYY).** Result: <path>.` at the top, rename the file to end with `-done`, move it into `.claude/handoff/done/` (`git mv`), and update every reference to its old path.
+If the project indexes its records (a `history.md` per docs area, or another index its `CLAUDE.md` names), add one entry for the handoff there, marked live.
+
+When the handed-off task is finished, mark the handoff done: add `> **Status: DONE (DD-MM-YYYY).** Result: <path>.` at the top, rename the file to end with `-done`, move it into `.claude/handoff/done/` (`git mv`), and update every reference to its old path, the index entry included.
 
 ## What goes in it
 

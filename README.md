@@ -183,7 +183,7 @@ flowchart TD
   every -- no --> files{"Applies when certain<br/>files are touched?"}
   files -- yes --> rule[".claude/rules/area.md<br/>with paths: globs"]
   files -- no --> steps{"Step-by-step procedure?"}
-  steps -- yes --> skill[".claude/skills/name/SKILL.md"]
+  steps -- yes --> skill[".claude/skills/name/SKILL.md<br/>plus reference files"]
   steps -- no --> docs{"Who decides it?"}
   docs -- you --> product[".claude/docs/product/<br/>Decided, Ideas, Open questions"]
   docs -- "facts, checked" --> tech[".claude/docs/tech/<br/>the reason goes to decisions.md"]
