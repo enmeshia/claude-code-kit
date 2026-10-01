@@ -176,7 +176,9 @@ CHECK
 A. Every number, name, path, command and claim: is it in a source, and does it match?
    Check that every path exists.
 B. What the sources hold that a reader of the docs would need and cannot find.
-C. Proposals or open questions written as decisions. Decisions the user did not make.
+C. Proposals or open questions written as decisions. Decisions the user did not make. A choice
+   made only for a test (sample data, a fixture, a sandbox setting, a variant picked for the test)
+   written as the product's choice. A limit of today's tools written as a rule of the product.
 D. <the project's writing rules, and the command that checks them, if any>
 E. Run records, dated story or superseded values in a living doc. A fact written in two living
    docs.
@@ -260,7 +262,7 @@ project's agent guide and the docs this plan touches, by path>.
 - Update <the living docs, by path: the project's docs, rule files, skills, the agent guide's map>:
   what is true now. The numbers and the story stay in the log; add one entry to the project's
   history index if it has one. Facts come only from the handoff log, this plan and the code.
-  Proposals stay marked as proposals.
+  Proposals stay marked as proposals, and what a test used stays marked as the test's.
 - Fill in "What the plan got wrong" in this plan.
 - <any handoff for the next piece of work, if the plan calls for one>
 

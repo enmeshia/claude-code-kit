@@ -83,7 +83,8 @@ existing one on the topic and extend it.
   before you create or edit a doc in that area, and add every new doc to its list.
 - **Product design belongs to the owner.** Propose design decisions in your reply. Never write one
   into a doc as settled until the owner agrees. The owner's answers to open questions are leanings
-  until they call a point decided (`.claude/docs/product/README.md`).
+  until they call a point decided (`.claude/docs/product/README.md`). A pick made for a test is
+  test data, not the product's choice: say so. A limit of today's tools is never a product rule.
 
 ## Done means
 

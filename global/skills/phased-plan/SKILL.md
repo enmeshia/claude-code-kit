@@ -197,7 +197,8 @@ So the last phase writes the docs and has them checked:
    handoff log, the plan, the code and data files. Not the orchestrator's memory of the run.
 2. **A fresh sub-agent checks them and edits nothing.** It gets the changed files and the same
    sources, and checks every number, name, path and claim against them. It also looks for gaps a
-   reader would trip on, for proposals written as decisions, for run records, dated story or
+   reader would trip on, for proposals written as decisions, for a choice made only for a test
+   or a limit of today's tools written as the product's, for run records, dated story or
    superseded values in living docs, for a fact now written in two living docs, and for the
    project's writing rules.
    It replies with a list: file and line, what it says, what the source says, the fix.
@@ -207,6 +208,11 @@ So the last phase writes the docs and has them checked:
 In one real run the first check found 17 errors and the second 11 more. Nearly all were in a handoff
 the orchestrator had written itself from its own long context. The docs a sub-agent wrote from the
 log alone had three.
+
+Matching every number to its source is not enough. In another run every number was right, and the
+docs still described the one sample outfit a test had used as if the product were tied to it, and a
+tool's limit as a product rule. The check has to ask what each line claims, not only whether it
+matches.
 
 This also holds for anything the user asks the orchestrator to write after the plan: a handoff, a
 summary, a report. Fire a writer and a checker for it.
