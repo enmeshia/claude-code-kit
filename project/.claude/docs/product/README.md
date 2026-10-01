@@ -21,9 +21,12 @@ under the same rules. How the product is built lives in `.claude/docs/tech/`.
   one file, give it a folder with its own `README.md` list.
 - Add every new doc or folder to the list below in the same change. The guide check flags one that
   is missing.
+- Finished work, research and dropped approaches: `history.md`. Its format is in
+  `.claude/docs/tracks/README.md`.
 
 ## Docs
 
 | Doc | What it holds |
 |---|---|
 | `concept.md` | the product at a glance: what is decided, the ideas on the table, open questions. Read it first |
+| `history.md` | every plan, log, handoff and research doc of this area, newest first, and the dropped approaches |

@@ -32,6 +32,7 @@ test("installs global and project files into empty folders", () => {
   assert.ok(fs.existsSync(path.join(project, "CLAUDE.md")), "template is renamed to CLAUDE.md");
   assert.ok(!fs.existsSync(path.join(project, "CLAUDE.template.md")));
   assert.ok(fs.existsSync(path.join(project, ".claude", "hooks", "check-guide.sh")));
+  assert.ok(fs.existsSync(path.join(project, ".claude", "tools", "lost_facts.sh")));
   assert.ok(fs.existsSync(path.join(project, ".claude", "plans", "done")));
   assert.ok(fs.existsSync(path.join(project, ".claude", ".gitattributes")), "dotfiles are copied");
   assert.match(out, /0 to merge by hand/);

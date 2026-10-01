@@ -11,7 +11,7 @@ Scope: the user's global config, the current project, or both. If they didn't sa
 | `global/CLAUDE.md` | `~/.claude/CLAUDE.md` | how the user wants you to work, in every project |
 | `global/skills/` | `~/.claude/skills/` | `research`, `phased-plan` and `handoff` |
 | `project/CLAUDE.template.md` | `<project>/CLAUDE.md` | the project's agent guide, a template to fill |
-| `project/.claude/` | `<project>/.claude/` | docs areas, work folders, the guide check hook, settings |
+| `project/.claude/` | `<project>/.claude/` | docs areas with their `history.md` files, work folders, the guide check hook, the `lost_facts.sh` tool, settings |
 
 ## 1. Get the kit
 
@@ -21,14 +21,15 @@ there once for the ideas behind the kit.
 
 ## 2. Look before you install
 
-- Check that `sh` runs: `sh -c 'echo ok'`. The installer and the guide check hook are plain `sh`
-  scripts. macOS and Linux always have `sh`. On Windows it comes with Git for Windows, and Claude
-  Code then runs your shell commands and its hooks in Git Bash.
+- Check that `sh` runs: `sh -c 'echo ok'`. The installer, the guide check hook and
+  `lost_facts.sh` are plain `sh` scripts. macOS and Linux always have `sh`. On Windows it comes
+  with Git for Windows, and Claude Code then runs your shell commands and its hooks in Git Bash.
 - No `sh` (Windows without Git for Windows): do step 3 by hand. Copy each file, never overwrite
   one, and rename `CLAUDE.template.md` to `CLAUDE.md`. Leave the `SessionStart` hook out of
   `.claude/settings.json`, because Claude Code would run it in PowerShell, where it fails. Tell the
-  user the guide check needs Git for Windows (https://git-scm.com/downloads/win), and that the hook
-  entry to add afterwards is in the kit's `project/.claude/settings.json`.
+  user the guide check and `lost_facts.sh` need Git for Windows
+  (https://git-scm.com/downloads/win), and that the hook entry to add afterwards is in the kit's
+  `project/.claude/settings.json`.
 - The project root is the git root. If the current folder is not in a git repo, ask the user
   whether to install the project part at all.
 - Read what the kit will meet: `~/.claude/CLAUDE.md`, the project's `CLAUDE.md`, `.claude/`
@@ -103,17 +104,30 @@ not from guesses. The examples inside the placeholders are only examples.
   the test files, the commands to run them, and the conventions you find. The kit's
   `examples/rules/testing.md` shows the format.
 - **Tracks:** leave "Tracks so far: none", unless the user wants parallel sessions. Then follow
-  "Adding a track" in `.claude/docs/tracks/README.md`.
-- **Generated folders:** if the guide names paths inside generated folders the hook doesn't skip
-  yet, add them to `SKIP_FOLDERS` or `SKIP_PREFIXES` at the top of `.claude/hooks/check-guide.sh`.
+  "Adding a track" in `.claude/docs/tracks/README.md`. Each track gets its own `history.md`.
+- **Past work:** if `.claude/research/`, `.claude/plans/` or `.claude/handoff/` already hold files,
+  add one entry for each to the `history.md` of its area (`product/`, `tech/` or a track), in the
+  format in `.claude/docs/tracks/README.md`. The guide check flags a record that no `history.md`
+  names.
+- **Skills:** a project skill whose `SKILL.md` is over 20,000 bytes gets flagged. Move the detail
+  only some tasks need into reference files next to it, named in a "Reference files" table near
+  its top. Never delete any of it.
+- **Generated folders:** both scripts have a skip list at the top: `SKIP_FOLDERS` and
+  `SKIP_PREFIXES` in `.claude/hooks/check-guide.sh`, `SKIP_FOLDERS` in
+  `.claude/tools/lost_facts.sh`. Add the project's generated folders to both. The guide check then
+  does not test paths inside them, and `lost_facts.sh` does not count a fact found in their files.
 
-Keep `CLAUDE.md` under 150 lines, not counting HTML comments.
+Keep `CLAUDE.md` at most 150 lines, not counting HTML comments.
 
 ## 7. Verify
 
 All of these must hold. Fix and re-run until they do.
 
-- `sh .claude/hooks/check-guide.sh` from the project root prints nothing.
+- `sh .claude/hooks/check-guide.sh` from the project root prints nothing. In a project that
+  already had docs, it may flag text that was there before: a run record in a current doc, a link
+  into `done/`, the same long sentence in two docs. Show the user each one and fix it the way
+  they choose. A run record is never deleted: it moves to its plan, log or handoff (or a new
+  one), which a `history.md` entry names.
 - No `{{` is left in the project's `CLAUDE.md` and `.claude/`, or in `~/.claude/CLAUDE.md`.
 - `.claude/settings.json` is valid JSON. Check it with a JSON tool the machine has, like
   `python3 -m json.tool .claude/settings.json`, or in PowerShell
@@ -137,3 +151,7 @@ Don't commit. The rules you just installed say to ask first. Offer to commit on 
 Clone the kit again and run `sh install.sh all <project root> --dry-run`. New kit files are
 `copied`. For each `MERGE` file, diff the kit's version against the installed one, and bring over
 the kit's changes the user hasn't overridden. Ask when unsure: after install, the files are theirs.
+
+A project set up before the kit had `history.md` files: give each docs area (`product/`, `tech/`,
+each track) a `history.md`, move each track README's "## Work" table into it as one entry per row,
+delete that table, and add entries for the other records as step 6 says. Then run the guide check.

@@ -7,7 +7,8 @@ A setup for working with [Claude Code](https://code.claude.com) as your main dev
   (a plan that a fresh session runs phase by phase through sub-agents) and `handoff` (hand a long
   session to a fresh one).
 - **A project skeleton**: a short agent guide (`CLAUDE.md`), one home for each kind of knowledge
-  in `.claude/`, and a hook that tells Claude when the guide has gone stale.
+  in `.claude/`, a `history.md` per docs area that indexes past work, a hook that tells Claude
+  when the guide has gone stale, and a tool that finds facts lost when docs are trimmed.
 
 It is not tied to a language, framework or tool, and works on macOS, Windows and Linux.
 
@@ -35,14 +36,14 @@ The installer never overwrites a file. It lists the files that already existed, 
 them, and the `{{...}}` placeholders left to fill. Then ask Claude to "finish the setup with
 SETUP.md, steps 4 to 8".
 
-**Needs:** Claude Code and git. The installer and the hook are plain `sh` scripts, so there is
-nothing else to install:
+**Needs:** Claude Code and git. The installer, the hook and the tool are plain `sh` scripts, so
+there is nothing else to install:
 
 | | |
 |---|---|
 | macOS, Linux | `sh` is built in |
 | Windows | `sh` comes with [Git for Windows](https://git-scm.com/downloads/win) (Git Bash). Claude Code then runs its commands and hooks in Git Bash. Run the commands above in Git Bash |
-| Windows without Git for Windows | Claude copies the files itself and leaves the hook out. Everything works except the guide check |
+| Windows without Git for Windows | Claude copies the files itself and leaves the hook out. Everything works except the guide check and `lost_facts.sh` |
 
 Tested so far on Windows. macOS testing is next.
 
@@ -59,9 +60,11 @@ project/                      installs to your project root
   .claude/
     settings.json             the hook; your deny rules go here too
     hooks/check-guide.sh      the guide check, runs at session start
+    tools/lost_facts.sh       finds facts lost when text leaves a current doc
     docs/product/             what the product is. You decide
     docs/tech/                how it is built, and why (decisions.md)
     docs/tracks/              optional: areas for parallel sessions
+    docs/*/history.md         one per docs area: an index of past work
     rules/                    conventions that load with matching files
     skills/                   project procedures
     research/  plans/done/  handoff/done/
@@ -90,11 +93,13 @@ flowchart LR
     RU[".claude/rules/*.md<br/>when Claude reads a matching file"]
     SB["a skill's full text<br/>when the skill is used"]
     DO[".claude/docs/<br/>when CLAUDE.md points there"]
-    WK["research, plans, handoffs<br/>when a task names them"]
+    HI["history.md<br/>when a task needs past work"]
+    WK["research, plans, handoffs<br/>when history.md or a task names them"]
   end
   PC --> RU
   PC --> DO
-  PC --> WK
+  DO --> HI
+  HI --> WK
   SN --> SB
 ```
 
@@ -113,6 +118,8 @@ flowchart TD
   decide --> plan["phased-plan skill<br/>.claude/plans/DD-MM-YYYY-topic-plan.md"]
   plan --> fresh["A fresh session runs the plan<br/>one sub-agent per phase"]
   fresh --> done["Plan and log marked DONE<br/>and moved to done/"]
+  done --> hist["One entry in the area's<br/>history.md"]
+  rdoc --> hist
   long["A session gets long"] --> handoff["/handoff<br/>.claude/handoff/DD-MM-YYYY-topic.md"]
   handoff --> fresh
 ```
@@ -122,7 +129,7 @@ flowchart TD
 - **Plans run in a fresh session.** The session that wrote a plan is full of discussion. A fresh
   one starts clean and reads only the plan.
 - **Finished work moves to `done/`** with a status line on top, so open work is what's left in
-  `plans/` and `handoff/`.
+  `plans/` and `handoff/`. Its area's `history.md` gets one entry that points to it.
 
 ### Running a phased plan
 
@@ -144,7 +151,7 @@ sequenceDiagram
     S-->>O: report, 15 lines at most
     O->>O: run the build itself, commit the phase
   end
-  O->>S: a writer sub-agent updates the docs from the log
+  O->>S: a writer sub-agent updates the current docs and history.md from the log
   O->>S: a fresh checker compares the docs with the log and the code
   O->>You: result and open questions
 ```
@@ -155,8 +162,11 @@ sequenceDiagram
   it, not "it works".
 - **The handoff log is the only memory between phases.** Each phase appends a fixed-shape entry.
 - **A test that fails twice for the same reason stops the run.** No quiet redesigns at hour three.
+- **Your answers are kept word for word** in the log, under
+  `## Gate <name>, owner's answer (<date>)`.
 - **Docs get checked like code.** A sub-agent writes them from the log, and a fresh one checks
-  every number and path against the sources.
+  every number and path against the sources. It also looks for a test's pick, a proposal or a
+  tool's limit written as the product's.
 
 ### Where knowledge goes
 
@@ -185,22 +195,75 @@ point decided. A session that reads an idea as a spec builds the wrong thing.
 
 Docs follow the change: when a change makes a doc, rule or skill wrong, the same change fixes it.
 
+### Current docs and records
+
+```mermaid
+flowchart LR
+  subgraph current["Current docs: what is true now"]
+    CM["CLAUDE.md, rules, skills"]
+    CD[".claude/docs/<br/>design, tech and topic docs"]
+  end
+  subgraph records["Records: change only in a status line or a pointer"]
+    RE["research/"]
+    PL["plans/"]
+    HO["handoff/<br/>logs too"]
+  end
+  HI["history.md<br/>one per docs area"]
+  CD --> HI
+  HI --> RE
+  HI --> PL
+  HI --> HO
+```
+
+- **Current docs** (`CLAUDE.md`, rules, skills, and `.claude/docs/` except each `history.md`) say
+  what is true now. A run's numbers, a dated story and your exact words stay in the run's plan,
+  log or handoff. A run record copied into a current doc is read by every later session.
+- **Each docs area** (`product/`, `tech/`, every track) has one `history.md`: an entry per plan,
+  log, handoff and research doc, newest first, with the result, your verdict, links and dropped
+  approaches. An entry is at most 1,500 bytes, because it only points to its log.
+- **Finding past work:** the area's `history.md`, then the entry's log, then the `git show`
+  command in the entry for a file that left the tree. The steps are in the installed `CLAUDE.md`.
+- **Moving text out of a current doc** can drop a fact without anyone noticing.
+  `sh .claude/tools/lost_facts.sh --since <rev> [--path <file>]... [--strict]` lists each fact (a
+  number, a date, a backticked name, quoted text) removed from current docs since `<rev>` that
+  is now in no `.md` file and no data file (JSON, YAML, TOML, INI, CSV) of the repo, lock files,
+  non-`.md` files in `.claude/` and skipped folders aside. A backticked name or quoted text also
+  counts as found in a code file. A number or date does not, because almost any number is somewhere in real code. `--path`
+  limits it to some files, read from the folder you run it in. With `--strict` it exits with 1
+  when it finds one.
+- **The guide check enforces three size limits:** `CLAUDE.md` 150 lines, each `SKILL.md` 20,000
+  bytes, each history entry 1,500 bytes. A track README's "Where it stands" is at most 12 lines,
+  as a writing rule for that section. No decision, design, tech or topic doc has a size limit,
+  because one would push real decisions out of the docs. Detail that only some tasks need moves
+  to a rule, a skill reference file or a topic doc.
+
 ### The guide checks itself
 
-Guides fail by going stale: a renamed folder, a doc nobody listed, a file that grew to 400 lines.
+Guides fail by going stale or by slowly turning into logs: a renamed folder, a doc nobody listed,
+a `CLAUDE.md` that grew to 400 lines, a "Test records" section added to a design doc.
 `.claude/hooks/check-guide.sh` runs at every session start and prints nothing when all is well.
 Otherwise Claude sees the problems in its context. It checks that:
 
 - every repo path written in backticks in the guide, rules, skills and docs exists,
 - every `paths:` glob in a rule points into a folder that exists,
+- every doc sits in an area folder, not loose in `.claude/docs/`,
 - every docs folder has a `README.md` whose "## Docs" list matches the files next to it,
-- every research doc, plan and handoff named after a track is in that track's work list,
-- `CLAUDE.md` stays under 150 lines, not counting HTML comments.
+- every record in `.claude/plans/`, `.claude/handoff/` and `.claude/research/` (`done/` included)
+  is named in some `history.md`,
+- no current doc has a run-record heading: "Test records", or a heading that ends in a comma and
+  a date (`, DD-MM-YYYY`),
+- no current doc links into a `done/` folder: `history.md` points there instead,
+- each `history.md` entry is at most 1,500 bytes,
+- no sentence of 120 or more characters is in two current docs,
+- `.claude/...md` paths in code files point to files that exist,
+- `CLAUDE.md` stays within its 150-line budget, not counting HTML comments,
+- each `SKILL.md` is at most 20,000 bytes.
 
 ### Tracks: parallel sessions (optional)
 
 When several sessions work at once, each in its own git worktree, give each one a track: an area
-with its own design, technical notes and work list. Sessions then rarely edit the same files.
+with its own design, technical notes and `history.md`. Sessions then rarely edit the same files.
+A track's README says where it stands today in at most 12 lines, replaced each time.
 
 ```mermaid
 flowchart LR
@@ -236,6 +299,10 @@ They are one person's taste. Edit anything you disagree with: after install, the
   adherence ([memory docs](https://code.claude.com/docs/en/memory)).
 - Path-scoped rules and skills load only when needed
   ([memory](https://code.claude.com/docs/en/memory), [skills](https://code.claude.com/docs/en/skills)).
+- After a context compaction only the first 5,000 tokens of a skill come back
+  ([skills](https://code.claude.com/docs/en/skills)). So each skill is a core `SKILL.md` of at
+  most 20,000 bytes, plus reference files for detail only some tasks need, named in a "Reference
+  files" table near its top.
 - Prose "never do X" rules are followed unreliably. Deny rules and hooks are enforced by Claude
   Code itself ([permissions](https://code.claude.com/docs/en/permissions),
   [hooks](https://code.claude.com/docs/en/hooks)).
@@ -246,8 +313,8 @@ The installed `.claude/docs/tech/decisions.md` §1 has the full reasons with sou
 
 ## Working on the kit
 
-- `node --test` from the kit root runs the tests for the installer and the hook (on Windows, from
-  Git Bash). Node is needed only for the tests, not to use the kit.
+- `node --test` from the kit root runs the tests for the installer, the hook and the tool (on
+  Windows, from Git Bash). Node is needed only for the tests, not to use the kit.
 - The scripts are plain POSIX `sh` and `awk`: no GNU-only options (macOS has the BSD versions),
   and few processes, because each one is slow to start in Git Bash.
 - The project template is named `CLAUDE.template.md`, so Claude Code doesn't load it as
