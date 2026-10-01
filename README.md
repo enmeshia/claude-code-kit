@@ -85,7 +85,7 @@ session. So only a small index loads up front, and everything else loads when it
 flowchart LR
   subgraph start["Every session, at start"]
     GC["~/.claude/CLAUDE.md<br/>how you work"]
-    PC["CLAUDE.md<br/>project index, max 150 lines"]
+    PC["CLAUDE.md<br/>project index, max 200 lines"]
     SN["skill names and descriptions"]
     HK["guide check hook<br/>prints only problems"]
   end
@@ -231,7 +231,7 @@ flowchart LR
   counts as found in a code file. A number or date does not, because almost any number is somewhere in real code. `--path`
   limits it to some files, read from the folder you run it in. With `--strict` it exits with 1
   when it finds one.
-- **The guide check enforces three size limits:** `CLAUDE.md` 150 lines, each `SKILL.md` 20,000
+- **The guide check enforces three size limits:** `CLAUDE.md` 200 lines, each `SKILL.md` 20,000
   bytes, each history entry 1,500 bytes. A track README's "Where it stands" is at most 12 lines,
   as a writing rule for that section. No decision, design, tech or topic doc has a size limit,
   because one would push real decisions out of the docs. Detail that only some tasks need moves
@@ -256,7 +256,7 @@ Otherwise Claude sees the problems in its context. It checks that:
 - each `history.md` entry is at most 1,500 bytes,
 - no sentence of 120 or more characters is in two current docs,
 - `.claude/...md` paths in code files point to files that exist,
-- `CLAUDE.md` stays within its 150-line budget, not counting HTML comments,
+- `CLAUDE.md` stays within its 200-line budget, not counting HTML comments,
 - each `SKILL.md` is at most 20,000 bytes.
 
 ### Tracks: parallel sessions (optional)

@@ -11,8 +11,8 @@ this file keeps what applies to the whole project.
 
 How `CLAUDE.md` and `.claude/` are laid out, and why. Set up from claude-code-kit on {{DD-MM-YYYY}}.
 
-- **CLAUDE.md is an index with a 150-line budget.** Anthropic's target is under 200 lines per
-  CLAUDE.md, because longer files cost context and lower adherence [1]. File lists and overviews
+- **CLAUDE.md is an index with a 200-line budget**, Anthropic's own target per file, because
+  longer files cost context and lower adherence [1]. File lists and overviews
   go stale first, and in 2026 studies they did not help agents find code. What helps is what
   search can't find: commands, traps, ignored folders.
 - **Area conventions go to `.claude/rules/` with `paths:` globs.** A rule loads when Claude reads a
@@ -44,7 +44,7 @@ How `CLAUDE.md` and `.claude/` are laid out, and why. Set up from claude-code-ki
   force real decisions out of the docs. So no decision, design, tech or topic doc has one, and no
   README, rule or skill reference file either. Detail that only some tasks need moves to a rule
   file, a skill reference file or a topic doc, never out of the docs. The limits:
-  - CLAUDE.md: 150 lines (above).
+  - CLAUDE.md: 200 lines (above).
   - A `SKILL.md`: 20,000 bytes, about 5,000 tokens. After a context compaction only about the first
     5,000 tokens of a skill come back [2].
   - A `history.md` entry: 1,500 bytes. It only points to its log, so nothing is lost.
@@ -66,8 +66,8 @@ How `CLAUDE.md` and `.claude/` are laid out, and why. Set up from claude-code-ki
   is now in no `.md` or data file (JSON, YAML, TOML, INI, CSV) of the repo. It searches the files
   git tracks or does not ignore, except lock files, code and data files in `.claude/`, and the
   folders in its skip list. A backticked name or quoted text also counts as found in a code file.
-  A number or date does not: almost any number of 3 or more digits is somewhere in real code, so code would hide
-  lost numbers. A deleted fact leaves no dead path behind, so the guide check can't see it.
+  A number or date does not: almost any number of 3 or more digits is somewhere in real code, so
+  code would hide lost numbers. A deleted fact leaves no dead path behind, so the guide check can't see it.
 - **Rules are plain, each with a short reason, said once, without caps.** Current Claude models
   follow instructions closely. Emphasis on many lines makes none of them stand out [6].
 - **Add a rule after a mistake happens twice, not once.** One session's stumble turned into a

@@ -37,7 +37,7 @@
 # 0: a hook must not block a session.
 # To check another repo's guide by hand: sh check-guide.sh <repo root>
 
-LINE_BUDGET=150
+LINE_BUDGET=200
 SKILL_LIMIT=20000
 ENTRY_LIMIT=1500
 REPEAT_MIN=120

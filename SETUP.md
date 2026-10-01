@@ -117,7 +117,7 @@ not from guesses. The examples inside the placeholders are only examples.
   `.claude/tools/lost_facts.sh`. Add the project's generated folders to both. The guide check then
   does not test paths inside them, and `lost_facts.sh` does not count a fact found in their files.
 
-Keep `CLAUDE.md` at most 150 lines, not counting HTML comments.
+Keep `CLAUDE.md` at most 200 lines, not counting HTML comments.
 
 ## 7. Verify
 

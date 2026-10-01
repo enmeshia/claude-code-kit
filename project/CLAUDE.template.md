@@ -1,6 +1,6 @@
 <!--
 Notes for whoever edits this guide. Claude Code strips HTML comments, so these cost no context.
-- Budget: 150 lines, not counting comments. The guide check hook warns when the file is over.
+- Budget: 200 lines, not counting comments. The guide check hook warns when the file is over.
 - This file is an index: what the project is, the rules every session needs, and where everything
   else lives. Area conventions go to .claude/rules/, procedures to skills, facts and reasons to
   .claude/docs/. Why: .claude/docs/tech/decisions.md §1.

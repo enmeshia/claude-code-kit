@@ -285,15 +285,15 @@ const claudeMdLines = (n) =>
 
 test("CLAUDE.md at its line budget passes, one line over is reported", () => {
   const root = healthy();
-  write(root, "CLAUDE.md", claudeMdLines(150));
+  write(root, "CLAUDE.md", claudeMdLines(200));
   assert.equal(check(root), "");
-  write(root, "CLAUDE.md", claudeMdLines(151));
-  assert.deepEqual(problems(root), [`CLAUDE.md is 151 lines without comments, over its 150-line limit. ${MOVE}`]);
+  write(root, "CLAUDE.md", claudeMdLines(201));
+  assert.deepEqual(problems(root), [`CLAUDE.md is 201 lines without comments, over its 200-line limit. ${MOVE}`]);
 });
 
 test("CLAUDE.md comment lines do not count", () => {
   const root = healthy();
-  write(root, "CLAUDE.md", claudeMdLines(150) + "<!--\n" + ("c".repeat(99) + "\n").repeat(140) + "-->\n");
+  write(root, "CLAUDE.md", claudeMdLines(200) + "<!--\n" + ("c".repeat(99) + "\n").repeat(140) + "-->\n");
   assert.equal(check(root), "");
 });
 
