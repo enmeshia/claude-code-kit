@@ -8,6 +8,8 @@
 # - Paths: repo paths in backticks in the guide files exist. A token counts as a repo path when it
 #   has a slash and starts with .claude/ or with a folder or file that exists at the repo root.
 # - Globs: the folder part of every `paths:` glob in the guide files exists.
+#   Neither check tests a path through .git or a skipped folder (SKIP_PREFIXES, SKIP_FOLDERS), and
+#   a missing path that git ignores is fine: a fresh clone or worktree lacks it.
 # - Areas: docs sit inside an area folder, not loose in .claude/docs.
 # - Docs lists: every folder in .claude/docs has a README.md whose "## Docs" list names each doc
 #   and subfolder next to it, and names nothing that is gone.
@@ -44,7 +46,8 @@ REPEAT_MIN=120
 MAX_LINES=15
 # Made on first use or generated, so they can be missing in a fresh clone or worktree. Not an
 # error. Paths under these prefixes, or through a folder with one of these names, are not checked.
-# Add your project's generated folders here if the guide names paths inside them.
+# In a git repo, a missing path that git ignores is never reported, so add a folder here only when
+# git does not ignore it, or the project is not in git.
 SKIP_PREFIXES=""
 SKIP_FOLDERS="node_modules .venv venv __pycache__ dist build out target .next"
 # Code files whose paths to .md files under .claude/ are checked.
@@ -59,6 +62,8 @@ if ! cd "$ROOT" 2>/dev/null; then
   exit 0
 fi
 TAB=$(printf '\t')
+NL='
+'
 
 # Lines of code files that contain ".claude/", as "path:line:text".
 code_hits() {
@@ -110,7 +115,10 @@ function skipped(t,   n, m, i, j, p, f, parts) {
   for (i = 1; i <= n; i++) if (index(t, p[i]) == 1) return 1
   n = split(t, parts, "/")
   m = split(skip_folders, f, " ")
-  for (i = 1; i < n; i++) for (j = 1; j <= m; j++) if (parts[i] == f[j]) return 1
+  for (i = 1; i < n; i++) {
+    if (parts[i] == ".git") return 1
+    for (j = 1; j <= m; j++) if (parts[i] == f[j]) return 1
+  }
   return 0
 }
 # Sorts a[1..n]. With bypart, by path parts, as Python sorts paths.
@@ -453,7 +461,10 @@ problems=$(
   } | LC_ALL=C awk -v q="'" -v skip_prefixes="$SKIP_PREFIXES" -v skip_folders="$SKIP_FOLDERS" \
     -v budget="$LINE_BUDGET" -v skill_limit="$SKILL_LIMIT" -v entry_limit="$ENTRY_LIMIT" \
     -v repeat_min="$REPEAT_MIN" "$CHECKS" | {
-    count=0
+    # Each problem waits in $held as "path<TAB>problem" ("." when it names no path), so that one
+    # git call can drop the missing paths git ignores: a fresh clone or worktree lacks them.
+    held=
+    missing=
     while IFS="$TAB" read -r kind file a b; do
       case $kind in
         P)
@@ -467,16 +478,30 @@ problems=$(
         G)
           [ -e "$b" ] && continue
           problem="$file: glob \"$a\" points into \`$b\`, which does not exist"
+          b=${b%/}/ # a folder, so git matches ignore patterns like "out/"
           ;;
         C)
           [ -e "$b" ] && continue
           problem="$file:$a names \`$b\`, which does not exist"
           ;;
-        *) problem=$b ;;
+        *) problem=$b; b=. ;;
       esac
+      held="$held$b$TAB$problem$NL"
+      [ "$b" != . ] && missing="$missing$b$NL"
+    done
+    ignored=
+    if [ -n "$missing" ]; then
+      ignored=$(printf '%s' "$missing" | git -c core.quotepath=off check-ignore --stdin 2>/dev/null)
+    fi
+    count=0
+    while IFS="$TAB" read -r path problem; do
+      [ -z "$problem" ] && continue
+      case "$NL$ignored$NL" in *"$NL$path$NL"*) continue ;; esac
       count=$((count + 1))
       [ "$count" -le "$MAX_LINES" ] && echo "- $problem"
-    done
+    done <<EOF
+$held
+EOF
     [ "$count" -gt "$MAX_LINES" ] && echo "- ... and $((count - MAX_LINES)) more"
   }
 )

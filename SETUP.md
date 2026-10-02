@@ -112,10 +112,11 @@ not from guesses. The examples inside the placeholders are only examples.
 - **Skills:** a project skill whose `SKILL.md` is over 20,000 bytes gets flagged. Move the detail
   only some tasks need into reference files next to it, named in a "Reference files" table near
   its top. Never delete any of it.
-- **Generated folders:** both scripts have a skip list at the top: `SKIP_FOLDERS` and
-  `SKIP_PREFIXES` in `.claude/hooks/check-guide.sh`, `SKIP_FOLDERS` in
-  `.claude/tools/lost_facts.sh`. Add the project's generated folders to both. The guide check then
-  does not test paths inside them, and `lost_facts.sh` does not count a fact found in their files.
+- **Generated folders:** in a git repo, both scripts already leave out what git ignores. Add a
+  generated folder to the skip lists at the top only when git does not ignore it, or the project
+  is not in git: `SKIP_FOLDERS` and `SKIP_PREFIXES` in `.claude/hooks/check-guide.sh`,
+  `SKIP_FOLDERS` in `.claude/tools/lost_facts.sh`. The guide check then does not test paths inside
+  them, and `lost_facts.sh` does not count a fact found in their files.
 
 Keep `CLAUDE.md` at most 200 lines, not counting HTML comments.
 

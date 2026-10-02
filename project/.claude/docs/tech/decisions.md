@@ -56,6 +56,9 @@ How `CLAUDE.md` and `.claude/` are laid out, and why. Set up from claude-code-ki
   a file over its size limit. Stale paths are the main way agent guides fail as a project grows.
   Whatever a SessionStart hook prints goes into Claude's context [5]. The full list of checks is in
   the comment at its top.
+  - A missing path that git ignores, or one inside `.git`, is not a problem. Build output and
+    files made on first use are missing in a fresh clone or worktree, and in a worktree `.git` is
+    a file. Reporting them would be a false alarm in every parallel session.
   - It is plain POSIX `sh` and `awk`, so it runs on macOS and Linux as they are, and on Windows
     through Git Bash, which comes with Git for Windows. Nothing else to install.
   - On Windows, Claude Code runs hooks in Git Bash when it is installed, and in PowerShell when it

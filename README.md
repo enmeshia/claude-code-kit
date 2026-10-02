@@ -245,7 +245,8 @@ a `CLAUDE.md` that grew to 400 lines, a "Test records" section added to a design
 Otherwise Claude sees the problems in its context. It checks that:
 
 - every repo path written in backticks in the guide, rules, skills and docs exists,
-- every `paths:` glob in a rule points into a folder that exists,
+- every `paths:` glob in a rule points into a folder that exists. For both, a missing path that
+  git ignores is fine, because a fresh clone or worktree doesn't have it yet,
 - every doc sits in an area folder, not loose in `.claude/docs/`,
 - every docs folder has a `README.md` whose "## Docs" list matches the files next to it,
 - every record in `.claude/plans/`, `.claude/handoff/` and `.claude/research/` (`done/` included)

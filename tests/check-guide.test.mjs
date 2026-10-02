@@ -148,6 +148,22 @@ test("a stale path in CLAUDE.md is reported, a path through a generated folder i
   assert.doesNotMatch(out, /node_modules|feat\/branch/);
 });
 
+test("in a git repo, a missing path that git ignores is not reported, nor a path through .git", () => {
+  const root = healthy();
+  execFileSync("git", ["init", "-q"], { cwd: root, stdio: "pipe" });
+  build(root, {
+    ".gitignore": "reports/\n*.log\n",
+    ".claude/rules/reports.md": '---\npaths:\n  - "app/reports/**"\n---\n# Reports\n',
+  });
+  fs.appendFileSync(
+    path.join(root, "CLAUDE.md"),
+    "- Made by a run: `app/reports/today.html`, `app/reports/`, `app/run.log`\n" +
+      "- Git's own: `.git/worktrees/main/HEAD`\n" +
+      "- Gone: `app/gone.ts`\n",
+  );
+  assert.deepEqual(problems(root), ["CLAUDE.md:10 names `app/gone.ts`, which does not exist"]);
+});
+
 test("a rule glob into a missing folder is reported", () => {
   const root = healthy();
   write(root, ".claude/rules/api.md", '---\npaths:\n  - "server/api/**"\n---\n# API\n');
