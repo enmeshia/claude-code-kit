@@ -91,7 +91,8 @@ creates it.
 
 ### Loop
 
-1. Read the handoff log. Find the first phase not marked done.
+1. Find the first phase not marked done from the log's `## Phase N done` headings. Read only the
+   last entry: the log grows every phase.
 2. Fire **one** sub-agent with the prompt template below, filled in from that phase's section.
 3. Read the sub-agent's report, which is at most 15 lines.
 4. Run the build yourself. Commit the phase. If the report says blocked, show the block to the user
@@ -112,9 +113,12 @@ You are implementing Phase <N> of <the thing> for <the project>.
 Working directory: <absolute path>
 
 FIRST, read these, in this order, and nothing else unless you need it:
-  1. <the project's agent guide>     (rules, build, run, verify, traps)
+  1. <the project's agent guide, unless the sub-agent loads it already (in Claude Code a
+     general-purpose sub-agent loads CLAUDE.md; Explore and Plan do not). List it anyway when an
+     earlier phase changed it: the loaded copy can be the one from when the main session started>
   2. <handoff log path>              (what earlier phases built and decided)
   3. <the phase's "Reads" list>
+A rule pasted under RULES is not also listed here.
 
 THEN do only what Phase <N> says. Do not start the next phase.
 <paste the phase's Goal, Build, Key APIs, Done-when and Watch-out-for sections verbatim>
@@ -172,9 +176,13 @@ CHECK
 A. Every number, name, path, command and claim: is it in a source, and does it match?
    Check that every path exists.
 B. What the sources hold that a reader of the docs would need and cannot find.
-C. Proposals or open questions written as decisions. Decisions the user did not make.
+C. Proposals or open questions written as decisions. Decisions the user did not make. A choice
+   made only for a test (sample data, a fixture, a sandbox setting, a variant picked for the test)
+   written as the product's choice. A limit of today's tools written as a rule of the product.
 D. <the project's writing rules, and the command that checks them, if any>
-<second round only: E. Are these earlier findings fixed? <the numbered list>>
+E. Run records, dated story or superseded values in a living doc. A fact written in two living
+   docs.
+<second round only: F. Are these earlier findings fixed? <the numbered list>>
 
 REPLY with a numbered list, most important first: file:line, what it says, what the source
 says, the fix. Then "No other issues found", or not. At most 60 lines.
@@ -250,9 +258,11 @@ project's agent guide and the docs this plan touches, by path>.
 
 **Build.**
 - Only if the handoff log says the user chose it: run every test in one chain first. <the command>
-  If not, the docs say no chained run was made and name the last full run.
-- Update <the docs, by path: the project's docs, rule files, skills, the agent guide's map>.
-  Facts come only from the handoff log, this plan and the code. Proposals stay marked as proposals.
+  If not, no doc names a run: the user's answer is in the log.
+- Update <the living docs, by path: the project's docs, rule files, skills, the agent guide's map>:
+  what is true now. The numbers and the story stay in the log; add one entry to the project's
+  history index if it has one. Facts come only from the handoff log, this plan and the code.
+  Proposals stay marked as proposals, and what a test used stays marked as the test's.
 - Fill in "What the plan got wrong" in this plan.
 - <any handoff for the next piece of work, if the plan calls for one>
 

@@ -36,7 +36,9 @@ if they exist. Look for:
 - where research docs (or docs in general) go,
 - file naming and date format,
 - writing style rules,
-- status or "done" conventions.
+- status or "done" conventions,
+- an index that must list each new research doc (for example a `history.md` per docs area). If
+  there is one, add the entry when you save the doc.
 
 **Project rules beat global rules, and both beat the defaults below.** If the project says research
 goes in `docs/research/` with ISO dates, do that, even though the global default differs.

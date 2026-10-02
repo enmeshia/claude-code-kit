@@ -13,14 +13,20 @@ under the same rules. How the product is built lives in `.claude/docs/tech/`.
   questions, or reacts to research, a mockup or concept art, write the answers under Ideas as the
   owner's leanings, with the date, and say so in the reply. A point moves into Decided only when
   the owner calls it decided.
+- **A test's pick is not a decision.** What a test, demo or spike used (its sample data, its
+  settings, a variant picked for it) stays marked as the test's. What today's tools can't do goes
+  in Open questions as a limit, never in Decided as a product rule.
 - A decided point gets its date and a short reason next to it, in the same doc.
 - One topic per file, named plainly, like `onboarding.md` or `pricing.md`. When a topic outgrows
   one file, give it a folder with its own `README.md` list.
 - Add every new doc or folder to the list below in the same change. The guide check flags one that
   is missing.
+- Finished work, research and dropped approaches: `history.md`. Its format is in
+  `.claude/docs/tracks/README.md`.
 
 ## Docs
 
 | Doc | What it holds |
 |---|---|
 | `concept.md` | the product at a glance: what is decided, the ideas on the table, open questions. Read it first |
+| `history.md` | every plan, log, handoff and research doc of this area, newest first, and the dropped approaches |
