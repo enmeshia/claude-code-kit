@@ -174,8 +174,8 @@ phase in the chain, and the failure appears somewhere innocent.
 Give the last phase an optional step that chains every test in one run. Chained runs catch exactly
 this class of bug, and a plan that only ever runs one test at a time will not find it. The run can
 take a long time, so the orchestrator asks the user before the last phase whether to make it, and
-writes the answer into the handoff log. If the answer is no, the docs say so and name the last full
-run that was made.
+writes the answer into the handoff log. If the answer is no, no doc names a run: the user's answer
+is in the log (next section).
 
 ## Docs get a check, like code
 

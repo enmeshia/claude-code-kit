@@ -258,7 +258,7 @@ project's agent guide and the docs this plan touches, by path>.
 
 **Build.**
 - Only if the handoff log says the user chose it: run every test in one chain first. <the command>
-  If not, the docs say no chained run was made and name the last full run.
+  If not, no doc names a run: the user's answer is in the log.
 - Update <the living docs, by path: the project's docs, rule files, skills, the agent guide's map>:
   what is true now. The numbers and the story stay in the log; add one entry to the project's
   history index if it has one. Facts come only from the handoff log, this plan and the code.
