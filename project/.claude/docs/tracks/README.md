@@ -27,6 +27,22 @@ Tracks are optional. A project worked on by one session at a time can have none.
      each removed fact that no `.md` or data file in the repo holds. A backticked name or quoted
      text also counts as found in code.
 
+## Worktrees
+
+Each session works in its own git worktree, a folder next to the main checkout.
+
+- **Branches.** The default branch is checked out in the main checkout, so no other worktree can
+  switch to it. Start new work from the latest default branch: `git fetch`, then
+  `git switch -c <branch> origin/<default branch>`. After a PR merges, the worktree stays on the
+  old branch: make a fresh one before the next task.
+- **A new worktree lacks the gitignored files:** secrets such as `.env` (copy them from another
+  worktree), installed dependencies and build output (run the project's install and build
+  commands). Git settings are shared by all worktrees and need nothing.
+- **An app that only one session can drive at a time** (an open editor, a local server on a fixed
+  port, a local database) serves every worktree. Check that no other session is using it before
+  you do.
+- The git stash is shared by every worktree too. Never `git stash pop` an entry you didn't make.
+
 ## How track docs are written
 
 A track folder holds current docs (`README.md`, `design.md`, `tech.md`, topic docs) and one record

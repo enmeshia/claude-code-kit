@@ -102,7 +102,9 @@ not from guesses. The examples inside the placeholders are only examples.
 - **Dates:** today's date, `DD-MM-YYYY`, in `decisions.md` and `environment.md`.
 - **Tests:** if the project has tests, write `.claude/rules/testing.md` with `paths:` globs over
   the test files, the commands to run them, and the conventions you find. The kit's
-  `examples/rules/testing.md` shows the format.
+  `examples/rules/testing.md` shows the format. Then add this line to "Done means" in `CLAUDE.md`:
+  "**Tests follow `.claude/rules/testing.md`.** Read it before you write the first test in an
+  area: it loads by itself only once a test file is read."
 - **Tracks:** leave "Tracks so far: none", unless the user wants parallel sessions. Then follow
   "Adding a track" in `.claude/docs/tracks/README.md`. Each track gets its own `history.md`.
 - **Past work:** if `.claude/research/`, `.claude/plans/` or `.claude/handoff/` already hold files,

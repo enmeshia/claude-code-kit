@@ -42,7 +42,9 @@ are in their global `~/.claude/CLAUDE.md` and apply here. On top of those:
 - **Stop and ask before a choice that is hard to undo:** {{Example: "a new framework or database,
   a data migration, a public API change, any paid service or tool"}}.
 - **The product's needs come first, tools serve them.** If a tool can't do what the product needs,
-  say so and look for another way. Never shrink the product to fit the tool.
+  say so and look for another way. Never shrink the product to fit the tool. Test an approach
+  against the product's premise, its design and the tools' known limits before you recommend it.
+  If it only works by dropping one of them, report that it fails. Don't present it as an option.
 
 ## Never break
 
