@@ -29,6 +29,7 @@ test("installs global and project files into empty folders", () => {
   const out = run(["all", project], home);
   assert.ok(fs.existsSync(path.join(home, "CLAUDE.md")));
   assert.ok(fs.existsSync(path.join(home, "skills", "phased-plan", "SKILL.md")));
+  assert.ok(fs.existsSync(path.join(home, "skills", "docs-flow", "SKILL.md")));
   assert.ok(fs.existsSync(path.join(project, "CLAUDE.md")), "template is renamed to CLAUDE.md");
   assert.ok(!fs.existsSync(path.join(project, "CLAUDE.template.md")));
   assert.ok(fs.existsSync(path.join(project, ".claude", "hooks", "check-guide.sh")));

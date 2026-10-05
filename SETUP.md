@@ -9,7 +9,7 @@ Scope: the user's global config, the current project, or both. If they didn't sa
 | Kit | Installs to | What |
 |---|---|---|
 | `global/CLAUDE.md` | `~/.claude/CLAUDE.md` | how the user wants you to work, in every project |
-| `global/skills/` | `~/.claude/skills/` | `research`, `phased-plan` and `handoff` |
+| `global/skills/` | `~/.claude/skills/` | `research`, `phased-plan`, `handoff` and `docs-flow` |
 | `project/CLAUDE.template.md` | `<project>/CLAUDE.md` | the project's agent guide, a template to fill |
 | `project/.claude/` | `<project>/.claude/` | docs areas with their `history.md` files, work folders, the guide check hook, the `lost_facts.sh` tool, settings |
 
@@ -144,8 +144,9 @@ Tell the user, in a short list:
 - done or not done, and verified or not,
 - what was installed, what was merged, and each conflict you kept their way,
 - that the global rules and skills load in a new Claude Code session,
-- the three skills: `research` and `phased-plan` start when the task fits, and `/handoff` is
-  typed by the user when a session gets long.
+- the four skills: `research`, `phased-plan` and `docs-flow` start when the task fits, `/handoff`
+  is typed by the user when a session gets long, and `docs-flow` reviews all docs when the user
+  asks for a docs review.
 
 Don't commit. The rules you just installed say to ask first. Offer to commit on a new branch.
 
