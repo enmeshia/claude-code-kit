@@ -47,7 +47,7 @@ there is nothing else to install:
 | Windows | `sh` comes with [Git for Windows](https://git-scm.com/downloads/win) (Git Bash). Claude Code then runs its commands and hooks in Git Bash. Run the commands above in Git Bash |
 | Windows without Git for Windows | Claude copies the files itself and leaves the hook out. Everything works except the guide check and `lost_facts.sh` |
 
-Tested so far on Windows. macOS testing is next.
+Tested so far on Windows and macOS.
 
 ## What's inside
 
