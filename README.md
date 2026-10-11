@@ -3,10 +3,11 @@
 A setup for working with [Claude Code](https://code.claude.com) as your main developer:
 
 - **Global rules**: how Claude works with you in every project (writing, verifying, commits, plans).
-- **Four skills**: `research` (parallel sub-agents write a sourced research doc), `phased-plan`
+- **Five skills**: `research` (parallel sub-agents write a sourced research doc), `phased-plan`
   (a plan that a fresh session runs phase by phase through sub-agents), `handoff` (hand a long
-  session to a fresh one) and `docs-flow` (keep the docs current, decisions apart from history and
-  the start context small, with a review mode on request).
+  session to a fresh one), `docs-flow` (keep the docs current, decisions apart from history and
+  the start context small, with a review mode on request) and `current-status` (a short, read-only
+  report of where the project stands and what waits on you).
 - **A project skeleton**: a short agent guide (`CLAUDE.md`), one home for each kind of knowledge
   in `.claude/`, a `history.md` per docs area that indexes past work, a hook that tells Claude
   when the guide has gone stale, and a tool that finds facts lost when docs are trimmed.
@@ -57,6 +58,7 @@ global/                       installs to ~/.claude/
   skills/phased-plan/         plans that an orchestrator runs phase by phase
   skills/handoff/             /handoff: pass a long session to a fresh one
   skills/docs-flow/           keeps the project docs in shape; review mode on request
+  skills/current-status/      "where we at": a read-only status report
 project/                      installs to your project root
   CLAUDE.template.md          the agent guide, installed as CLAUDE.md
   .claude/
