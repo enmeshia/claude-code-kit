@@ -12,6 +12,7 @@ Scope: the user's global config, the current project, or both. If they didn't sa
 | `global/skills/` | `~/.claude/skills/` | `research`, `phased-plan`, `handoff`, `docs-flow` and `current-status` |
 | `project/CLAUDE.template.md` | `<project>/CLAUDE.md` | the project's agent guide, a template to fill |
 | `project/.claude/` | `<project>/.claude/` | docs areas with their `history.md` files, work folders, the guide check hook, the `lost_facts.sh` tool, settings |
+| `mods/` | Claude Code plugins | optional: `skins`, `workbench` and `prompt-copy`, installed in step 8 |
 
 ## 1. Get the kit
 
@@ -70,6 +71,7 @@ The "About me" section has `{{...}}` lines. Ask the user, in one message:
 2. Areas or tools that are new to you. Claude makes the technical calls there and says why.
 3. How you check work: do you read diffs, or judge by the running result?
 4. Anything else Claude should know, like your language or pet peeves.
+5. Which of the optional mods you want. List them with step 8's table.
 
 Write each answer as one short bullet. Delete the placeholder of any question they skip.
 
@@ -137,7 +139,32 @@ All of these must hold. Fix and re-run until they do.
   `Get-Content .claude/settings.json -Raw | ConvertFrom-Json`.
 - For each deny rule you added, try one edit it should block, and see it refused.
 
-## 8. Report
+## 8. Mods, if the user wants them
+
+The kit is also a plugin marketplace (`.claude-plugin/marketplace.json`) for three mods. Install
+only the ones the user picked in step 5.
+
+| Mod | What it does |
+|---|---|
+| `skins` | a new look for the transcript: tool rows that open onto their input and answer, code, diff and table cards, a usage band, 15 themes. `/skin` switches them |
+| `workbench` | the current task or plan above the prompt, and a side pane. In a project with `.claude/plans` or `.claude/docs` it shows the plans, tracks, handoffs and research, and the `current-status` report (one Sonnet call per Refresh) |
+| `prompt-copy` | a copy icon under the user's own prompts in the desktop app. Only useful with `skins`, which draws prompts without one |
+
+Add the marketplace from GitHub, not from your clone: a folder marketplace is read in place, and
+the clone is temporary. Then install each mod the user picked:
+
+```bash
+claude plugin marketplace add enmeshia/claude-code-kit
+claude plugin install skins@claude-code-kit
+```
+
+- If `claude plugin list` shows the original skins or Workbench (another marketplace), disable it
+  with `claude plugin disable <name>@<marketplace>`, so only one copy runs.
+- Workbench's options (plans folder, the pane at start, the band, following macOS light and dark)
+  keep their defaults. The user changes them with `/plugin configure workbench@claude-code-kit`.
+- `claude plugin list` shows each installed mod as enabled. They load in a new session.
+
+## 9. Report
 
 Tell the user, in a short list:
 
@@ -146,7 +173,8 @@ Tell the user, in a short list:
 - that the global rules and skills load in a new Claude Code session,
 - the five skills: `research`, `phased-plan` and `docs-flow` start when the task fits, `/handoff`
   is typed by the user when a session gets long, `docs-flow` reviews all docs when the user asks
-  for a docs review, and `current-status` answers "where we at" with a short status report.
+  for a docs review, and `current-status` answers "where we at" with a short status report,
+- the mods installed, if any.
 
 Don't commit. The rules you just installed say to ask first. Offer to commit on a new branch.
 

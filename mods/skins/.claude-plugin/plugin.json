@@ -1,0 +1,18 @@
+{
+  "name": "skins",
+  "version": "0.5.0-local.3",
+  "description": "Local copy of hellosverre skins 0.5.0 with card and usage-band animations removed, the band's context written as tokens, and its Compact button in the Workbench mod's look at the right end. Skins for Claude Code: tool rows that open onto their input and answer, highlighted code, diff, table, math, Mermaid and shell cards, links, folding, a usage band, a calm mode and fifteen themes. /skin swaps them live.",
+  "author": {
+    "name": "hellosverre",
+    "url": "https://github.com/hellosverre"
+  },
+  "license": "MIT",
+  "keywords": [
+    "claude-code-mods",
+    "claude-mods",
+    "function-hooks",
+    "theme",
+    "skin"
+  ],
+  "types": "./types/index.d.ts"
+}

@@ -1,4 +1,4 @@
-// Tests for install.sh. Run from the kit root: node --test
+// Tests for install.sh. Run from the kit root: node --test tests/*.test.mjs
 import { after, test } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
