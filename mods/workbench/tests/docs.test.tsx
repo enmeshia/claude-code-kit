@@ -265,13 +265,13 @@ test('the report and the repo facts parse; sync reads git\'s branch line', async
 
 /* ── the pane, the band and the commands in a project with our docs flow ── */
 
-test('our docs flow replaces Tasks: For you, Plan, Tracks, Handoffs and Research; /task and its tool stay off', async ($, on) => {
+test('our docs flow: For you, Plan, Tracks, Handoffs and Research; no Tasks, no /task and no tool', async ($, on) => {
   const w = world(on, project(logWith([0, 1, 2, 3])), { report: REPORT })
   await $.session.start({ source: 'startup', cwd: ROOT } as never)
   await w.clock.settle()
   expect(w.registered).toEqual([])
   w.opened.length = 0
-  expect(String(((await $.command.run({ command: 'workbench:task', args: '' } as never)) as { text?: string }).text)).toMatch(/^Opened the Workbench pane\. This project keeps its plans in `\.claude\/plans\/`/)
+  expect(String(((await $.command.run({ command: 'workbench:task', args: '' } as never)) as { text?: string }).text)).toBe('Opened the Workbench pane.')
   expect(w.opened).toEqual(['workbench'])
   for (const surface of ['terminal', 'desktop'] as const) {
     const ui = await $.ui.mount(pane(surface))
@@ -469,20 +469,61 @@ test('an open handoff draws in the Handoffs box; a log its plan names, with no -
   }
 })
 
-test('a project without our docs keeps Tasks and /task', async ($, on) => {
-  const w = world(on, { [ROOT + '/README.md']: '# x' })
+test('a project without our docs: no Tasks and no /task, even with a plans folder; Files, In Flight and the Workbench button', async ($, on) => {
+  const task = '---\ntask: forecast\nproject: game\nshort: game\ntitle: Seven-day forecast\ndate: 2026-10-08\nend: 2026-10-08\nstatus: open\n---\n\n# Seven-day forecast\n\n## Work items\n\n- [~] Forecast screen `build`\n'
+  const w = world(on, { [ROOT + '/README.md']: '# x', [ROOT + '/plans/forecast.md']: task })
   await $.session.start({ source: 'startup', cwd: ROOT } as never)
   await w.clock.settle()
-  expect(w.registered).toEqual(['command:task', 'tool:work_items'])
-  const ui = await $.ui.mount(pane('terminal'))
-  expect(await ui.find({ type: 'Button', text: /^Task$/ })).toBeDefined()
-  expect(await ui.find({ type: 'Button', text: /^For you/ })).toBeUndefined()
-  await ui.unmount()
-  // No task and the pane closed: the same Workbench button, so the pane can come back.
+  expect(w.registered).toEqual([])
+  expect(w.opened).toEqual(['workbench'])
+  for (const surface of ['terminal', 'desktop'] as const) {
+    const ui = await $.ui.mount(pane(surface))
+    expect(await ui.find({ type: 'Button', text: /^Tasks?\b/ })).toBeUndefined()
+    expect(await ui.find({ type: 'Button', text: /^For you/ })).toBeUndefined()
+    expect(await ui.find({ type: 'Button', text: /^Files$/ })).toBeDefined()
+    expect(await ui.find({ type: 'Button', text: /^In Flight/ })).toBeDefined()
+    expect(await has(ui, /Seven-day forecast|Forecast screen/)).toBe(false)
+    await ui.unmount()
+  }
+  // The pane open: the band leaves what is beneath alone. Closed: the Workbench button alone, no task.
+  for (const surface of ['terminal', 'desktop'] as const) {
+    const open = await $.ui.mount(band(surface))
+    expect(await open.find({ type: 'Button', text: /^Workbench$/ })).toBeUndefined()
+    await open.unmount()
+  }
   w.up.delete('workbench')
-  const desk = await $.ui.mount(band('desktop'))
-  expect(await desk.find({ type: 'Button', text: /^Workbench$/ })).toBeDefined()
-  await desk.unmount()
+  for (const surface of ['terminal', 'desktop'] as const) {
+    const closed = await $.ui.mount(band(surface))
+    expect(await closed.find({ type: 'Button', text: /^Workbench$/ })).toBeDefined()
+    expect(await has(closed, /Seven-day forecast|Forecast screen/)).toBe(false)
+    await closed.unmount()
+  }
+  // /workbench:task only opens the pane; it never writes a plan file.
+  w.opened.length = 0
+  expect(String(((await $.command.run({ command: 'workbench:task', args: 'new Something' } as never)) as { text?: string }).text)).toBe('Opened the Workbench pane.')
+  expect(w.opened).toEqual(['workbench'])
+  expect([...w.disk.keys()].filter(k => k.startsWith(ROOT + '/plans/'))).toEqual([ROOT + '/plans/forecast.md'])
+})
+
+test('the file Claude is on shimmers in Claude touched until the turn ends; the Files box has no tree', async ($, on) => {
+  world(on, { [ROOT + '/src/app.ts']: 'x' })
+  on('prompt.submit', async (_$, e) => ({ text: (e as { text: string }).text }) as never)
+  on('tool.call', { tool: 'Edit' }, async () => ({ result: {}, text: '' }) as never)
+  on('turn.complete', async () => ({ text: '' }) as never)
+  await $.session.start({ source: 'startup', cwd: ROOT } as never)
+  const app = ROOT + '/src/app.ts'
+  const ui = await $.ui.mount(pane('terminal'))
+  await ui.press({ key: 'bf-toggle' })
+  expect(await ui.find({ type: 'Button', text: /^Files$/ })).toBeDefined()
+  expect(await ui.find({ type: 'Text', text: /^ALL FILES$|^All files$/ })).toBeUndefined()
+  expect(await ui.find({ type: 'Button', text: /^src$/ })).toBeUndefined()
+  await $.prompt.submit({ text: 'fix it' } as never)
+  await $.tool.call({ tool: 'Edit', file_path: app, old_string: 'x', new_string: 'y' } as never)
+  expect(await ui.find({ key: `tcn-${app}-sh-${app}` })).toBeDefined()
+  await $.turn.complete({ answer: '' } as never)
+  expect(await ui.find({ key: `tcn-${app}-sh-${app}` })).toBeUndefined()
+  expect((await ui.findAll({ type: 'Text', text: /^app\.ts$/ })).length).toBe(1)
+  await ui.unmount()
 })
 
 test('everything open, on the desktop, stays well under the 100,000 characters a pane may send', async ($, on) => {

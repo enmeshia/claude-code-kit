@@ -147,7 +147,7 @@ only the ones the user picked in step 5.
 | Mod | What it does |
 |---|---|
 | `skins` | a new look for the transcript: tool rows that open onto their input and answer, code, diff and table cards, a usage band, 15 themes. `/skin` switches them |
-| `workbench` | the current task or plan above the prompt, and a side pane. In a project with `.claude/plans` or `.claude/docs` it shows the plans, tracks, handoffs and research, and the `current-status` report (one Sonnet call per Refresh) |
+| `workbench` | a side pane with the files Claude touches and its agents, in every session. In a project with `.claude/plans` or `.claude/docs` it also shows the running plan and its phases above the prompt, and the plans, tracks, handoffs, research and the `current-status` report (one Sonnet call per Refresh) in the pane |
 | `prompt-copy` | a copy icon under the user's own prompts in the desktop app. Only useful with `skins`, which draws prompts without one |
 
 Add the marketplace from GitHub, not from your clone: a folder marketplace is read in place, and
@@ -160,7 +160,7 @@ claude plugin install skins@claude-code-kit
 
 - If `claude plugin list` shows the original skins or Workbench (another marketplace), disable it
   with `claude plugin disable <name>@<marketplace>`, so only one copy runs.
-- Workbench's options (plans folder, the pane at start, the band, following macOS light and dark)
+- Workbench's options (the pane at start, the band, following macOS light and dark)
   keep their defaults. The user changes them with `/plugin configure workbench@claude-code-kit`.
 - `claude plugin list` shows each installed mod as enabled. They load in a new session.
 
