@@ -1,0 +1,58 @@
+{
+  "name": "workbench",
+  "version": "0.1.30-local.5",
+  "description": "Local copy of eascend's Workbench: your current task or plan above the prompt and a side pane. In a project with .claude/plans or .claude/docs it shows For you, Plan, Tracks, Handoffs and Research from those files and the current-status report; elsewhere the plans/ tasks as upstream.",
+  "types": "./types/index.d.ts",
+  "author": {
+    "name": "eascend",
+    "url": "https://eascend.co"
+  },
+  "homepage": "https://github.com/eascendco/workbench",
+  "repository": "https://github.com/eascendco/workbench",
+  "license": "MIT",
+  "keywords": [
+    "mod",
+    "pane",
+    "tasks",
+    "file-tree",
+    "git"
+  ],
+  "userConfig": {
+    "plans_dir": {
+      "type": "string",
+      "title": "Plans folder",
+      "description": "Folder name for plan files, found at or above the session's folder. One plain name, no slashes.",
+      "default": "plans"
+    },
+    "open_pane": {
+      "type": "string",
+      "title": "Open the pane at start",
+      "description": "on opens the Workbench pane with every session; off leaves it closed until /task pane or the band's arrow.",
+      "default": "on",
+      "options": [
+        "on",
+        "off"
+      ]
+    },
+    "band": {
+      "type": "string",
+      "title": "Band above the prompt",
+      "description": "on shows the current task and its progress above the prompt; off hides it.",
+      "default": "on",
+      "options": [
+        "on",
+        "off"
+      ]
+    },
+    "follow_macos": {
+      "type": "string",
+      "title": "Match macOS light and dark",
+      "description": "on keeps Claude Code's theme on light or dark to match macOS appearance, so skins and the pane redraw for the right background; off leaves the theme alone.",
+      "default": "on",
+      "options": [
+        "on",
+        "off"
+      ]
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "skill_name": "current-status",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "where we at",
+      "expected_output": "Run in a project that has .claude/docs with several tracks. Status line first; a tracks table with the most active track first and the tracks not started folded into one row; open calls only for the owner (paid tools, licenses, terms of use, design calls, a plan waiting at a gate), each with the doc it lives in; under about 25 lines; no edits.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "catch me up on this project",
+      "expected_output": "Run in a project without .claude/docs (for example this kit). Says there are no status docs, builds the picture from README, commits and branches; does not create docs.",
+      "files": []
+    }
+  ]
+}

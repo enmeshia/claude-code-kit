@@ -3,13 +3,17 @@
 A setup for working with [Claude Code](https://code.claude.com) as your main developer:
 
 - **Global rules**: how Claude works with you in every project (writing, verifying, commits, plans).
-- **Four skills**: `research` (parallel sub-agents write a sourced research doc), `phased-plan`
+- **Five skills**: `research` (parallel sub-agents write a sourced research doc), `phased-plan`
   (a plan that a fresh session runs phase by phase through sub-agents), `handoff` (hand a long
-  session to a fresh one) and `docs-flow` (keep the docs current, decisions apart from history and
-  the start context small, with a review mode on request).
+  session to a fresh one), `docs-flow` (keep the docs current, decisions apart from history and
+  the start context small, with a review mode on request) and `current-status` (a short, read-only
+  report of where the project stands and what waits on you).
 - **A project skeleton**: a short agent guide (`CLAUDE.md`), one home for each kind of knowledge
   in `.claude/`, a `history.md` per docs area that indexes past work, a hook that tells Claude
   when the guide has gone stale, and a tool that finds facts lost when docs are trimmed.
+- **Three mods**, optional: `skins` (a new look for the transcript, with themes), `workbench`
+  (your current task above the prompt, and a side pane with plans, tracks and the status report)
+  and `prompt-copy` (a copy icon under your prompts, for skins).
 
 It is not tied to a language, framework or tool, and works on macOS, Windows and Linux.
 
@@ -35,7 +39,21 @@ sh install.sh all /path/to/project             # or: global, or: project /path/t
 
 The installer never overwrites a file. It lists the files that already existed, so you can merge
 them, and the `{{...}}` placeholders left to fill. Then ask Claude to "finish the setup with
-SETUP.md, steps 4 to 8".
+SETUP.md, steps 4 to 9".
+
+**Mods** are optional Claude Code plugins. This repo is their marketplace:
+
+```bash
+claude plugin marketplace add enmeshia/claude-code-kit
+claude plugin install skins@claude-code-kit
+claude plugin install workbench@claude-code-kit
+claude plugin install prompt-copy@claude-code-kit
+```
+
+`workbench` reads the `current-status` skill from the global part. `prompt-copy` only matters with
+`skins`, which draws your prompts without a copy icon. If you run the original skins or Workbench,
+disable it first. Each mod's own README is its original author's: install with the lines above,
+or you get the original version.
 
 **Needs:** Claude Code and git. The installer, the hook and the tool are plain `sh` scripts, so
 there is nothing else to install:
@@ -46,7 +64,7 @@ there is nothing else to install:
 | Windows | `sh` comes with [Git for Windows](https://git-scm.com/downloads/win) (Git Bash). Claude Code then runs its commands and hooks in Git Bash. Run the commands above in Git Bash |
 | Windows without Git for Windows | Claude copies the files itself and leaves the hook out. Everything works except the guide check and `lost_facts.sh` |
 
-Tested so far on Windows. macOS testing is next.
+Tested so far on Windows and macOS.
 
 ## What's inside
 
@@ -57,6 +75,7 @@ global/                       installs to ~/.claude/
   skills/phased-plan/         plans that an orchestrator runs phase by phase
   skills/handoff/             /handoff: pass a long session to a fresh one
   skills/docs-flow/           keeps the project docs in shape; review mode on request
+  skills/current-status/      "where we at": a read-only status report
 project/                      installs to your project root
   CLAUDE.template.md          the agent guide, installed as CLAUDE.md
   .claude/
@@ -74,6 +93,11 @@ examples/rules/testing.md     what a path-scoped rule looks like
 install.sh                    copies the kit, never overwrites
 SETUP.md                      the install procedure, written for Claude
 tests/                        tests for the installer and the hook
+mods/                         optional mods, installed as plugins
+  skins/                      themes and richer tool rows, based on hellosverre's skins
+  workbench/                  task band and side pane, based on eascend's Workbench
+  prompt-copy/                a copy icon under your prompts, for skins
+.claude-plugin/               makes this repo the mods' plugin marketplace
 ```
 
 ## How it works
@@ -316,13 +340,21 @@ The installed `.claude/docs/tech/decisions.md` §1 has the full reasons with sou
 
 ## Working on the kit
 
-- `node --test` from the kit root runs the tests for the installer, the hook and the tool (on
-  Windows, from Git Bash). Node is needed only for the tests, not to use the kit.
+- `node --test tests/*.test.mjs` from the kit root runs the tests for the installer, the hook and
+  the tool (on Windows, from Git Bash). Node is needed only for the tests, not to use the kit. A
+  bare `node --test` on a newer Node also picks up the mods' `.ts` tests, which only
+  `claude plugin test` can run.
 - The scripts are plain POSIX `sh` and `awk`: no GNU-only options (macOS has the BSD versions),
   and few processes, because each one is slow to start in Git Bash.
 - The project template is named `CLAUDE.template.md`, so Claude Code doesn't load it as
   instructions while you work in this repo. The installer renames it.
+- `claude plugin validate .` checks the marketplace, and `claude plugin test mods/<name>` runs a
+  mod's tests. The mods are copies of the versions the owner runs: to update one, copy its folder
+  over, without `.git` and `.claude-plugin/types/` (generated).
 
 ## License
 
-[MIT](LICENSE).
+The kit is [MIT](LICENSE). `mods/skins` is based on
+[hellosverre's skins](https://github.com/hellosverre/claude-skins) and `mods/workbench` on
+[eascend's Workbench](https://github.com/eascendco/workbench), both MIT, with their licenses in
+their folders.

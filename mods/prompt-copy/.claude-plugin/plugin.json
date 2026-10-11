@@ -1,0 +1,6 @@
+{
+  "name": "prompt-copy",
+  "version": "0.1.0",
+  "description": "A copy icon under your own prompts in the desktop app, shown while the pointer is over the prompt, like the app's own icon under replies. Works on top of skins, which draws the prompt without one.",
+  "types": "./types/index.d.ts"
+}

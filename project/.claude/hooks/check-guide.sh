@@ -448,7 +448,9 @@ END {
 }
 '
 
-problems=$(
+# A function, not inline in $(...): macOS sh (bash 3.2) misreads the case patterns of an inline
+# command substitution as its closing parenthesis.
+find_problems() {
   {
     echo @dirs
     find .claude/docs -mindepth 1 -type d 2>/dev/null
@@ -504,7 +506,8 @@ $held
 EOF
     [ "$count" -gt "$MAX_LINES" ] && echo "- ... and $((count - MAX_LINES)) more"
   }
-)
+}
+problems=$(find_problems)
 if [ -n "$problems" ]; then
   echo "Guide check ($NAME) found problems in the agent guide:"
   echo "$problems"

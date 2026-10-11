@@ -1,0 +1,10 @@
+{
+  "name": "claude-code-kit",
+  "owner": { "name": "enmeshia", "url": "https://github.com/enmeshia" },
+  "description": "Mods from claude-code-kit: skins, Workbench and the prompt copy icon",
+  "plugins": [
+    { "name": "skins", "source": "./mods/skins" },
+    { "name": "workbench", "source": "./mods/workbench" },
+    { "name": "prompt-copy", "source": "./mods/prompt-copy" }
+  ]
+}
