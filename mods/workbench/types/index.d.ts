@@ -1,35 +1,3 @@
-export type ItemStatus = 'draft' | 'todo' | 'doing' | 'done'
-/** `title` is a short label (a few words); anything longer goes in `details`. */
-export type WorkItem = { id: string; title: string; stage: string; status: ItemStatus; details?: string }
-export type DevEntry = { stages: string[]; items: WorkItem[] }
-export type Part = { id: string; date: string; status: string }
-export type Group = {
-  key: string
-  title: string
-  project: string
-  short: string
-  size?: string
-  start: string
-  end: string
-  open: boolean
-  parts: Part[]
-  stages: string[]
-  items: WorkItem[]
-  /** The plan file this task's work items live in. */
-  file?: string
-}
-export type Snap = {
-  status: 'idle' | 'loading' | 'ready' | 'none' | 'error'
-  message?: string
-  folder?: string
-  shorts: string[]
-  cur?: Group
-  prev: Group[]
-  next: Group[]
-  version?: number
-}
-export type PaneUi = { showPrev: boolean; stage?: string; paneOpen?: boolean; selected?: string }
-
 /* The Workbench pane */
 /** One file Claude read or edited this session; `active` while the tool runs. */
 export type Touch = { path: string; kind: 'read' | 'edited'; active: boolean; at: number }
@@ -51,9 +19,9 @@ export type Files = {
   all: string[]
 }
 export type Git = { isRepo: boolean; branch: string; top: string; dirty: string[] }
-/** `sections`: which of the pane's three cards are open (kept across sessions in the store). */
-export type WorkbenchUi = { itemsOpen: boolean; adding?: boolean; sections?: Partial<Record<SectionKey, boolean>> }
-export type SectionKey = 'tasks' | 'files' | 'deck' | 'foryou' | 'plan' | 'tracks' | 'handoffs' | 'research'
+/** `sections`: which of the pane's cards are open (kept across sessions in the store). */
+export type WorkbenchUi = { sections?: Partial<Record<SectionKey, boolean>> }
+export type SectionKey = 'files' | 'deck' | 'foryou' | 'plan' | 'tracks' | 'handoffs' | 'research'
 
 /* Our docs flow, read only: .claude/plans, .claude/handoff, .claude/research and their done/ folders */
 export type DocPhase = { n: number; name: string; size: string; optional: boolean; gate?: string; state: 'done' | 'doing' | 'todo' | 'optional' }
@@ -157,8 +125,6 @@ export type DeckRoster = { architectTypes: string[] }
 declare module 'claude-code' {
   interface PluginState {
     workbench: {
-      snap: Snap
-      ui: PaneUi
       files: Files
       git: Git
       touched: Touch[]

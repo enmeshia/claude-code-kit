@@ -12,8 +12,9 @@ A setup for working with [Claude Code](https://code.claude.com) as your main dev
   in `.claude/`, a `history.md` per docs area that indexes past work, a hook that tells Claude
   when the guide has gone stale, and a tool that finds facts lost when docs are trimmed.
 - **Three mods**, optional: `skins` (a new look for the transcript, with themes), `workbench`
-  (your current task above the prompt, and a side pane with plans, tracks and the status report)
-  and `prompt-copy` (a copy icon under your prompts, for skins).
+  (the running plan and its phases above the prompt, and a side pane with plans, tracks, the
+  status report, the files Claude touches and its agents) and `prompt-copy` (a copy icon under
+  your prompts, for skins).
 
 It is not tied to a language, framework or tool, and works on macOS, Windows and Linux.
 
@@ -55,6 +56,11 @@ claude plugin install prompt-copy@claude-code-kit
 disable it first. Each mod's own README is its original author's: install with the lines above,
 or you get the original version.
 
+![Workbench in a session running a phased plan: the plan's bar above the prompt, and the side pane with the next step, the open calls and the phases](media/workbench.png)
+
+Workbench in a session running a phased plan: phases 0 to 6 done, phase 7 in progress, and a
+Gate tag on each phase that stops for your answer.
+
 **Needs:** Claude Code and git. The installer, the hook and the tool are plain `sh` scripts, so
 there is nothing else to install:
 
@@ -95,9 +101,10 @@ SETUP.md                      the install procedure, written for Claude
 tests/                        tests for the installer and the hook
 mods/                         optional mods, installed as plugins
   skins/                      themes and richer tool rows, based on hellosverre's skins
-  workbench/                  task band and side pane, based on eascend's Workbench
+  workbench/                  plan band and side pane, based on eascend's Workbench
   prompt-copy/                a copy icon under your prompts, for skins
 .claude-plugin/               makes this repo the mods' plugin marketplace
+media/workbench.png           the Workbench picture above
 ```
 
 ## How it works

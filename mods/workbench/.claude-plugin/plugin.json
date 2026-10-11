@@ -1,7 +1,7 @@
 {
   "name": "workbench",
-  "version": "0.1.30-local.5",
-  "description": "Local copy of eascend's Workbench: your current task or plan above the prompt and a side pane. In a project with .claude/plans or .claude/docs it shows For you, Plan, Tracks, Handoffs and Research from those files and the current-status report; elsewhere the plans/ tasks as upstream.",
+  "version": "0.1.30-local.6",
+  "description": "Local copy of eascend's Workbench: a side pane and a band above the prompt, in every session. In a project with .claude/plans or .claude/docs it shows For you, Plan, Tracks, Handoffs and Research from those files and the current-status report. No tasks: the plans/ Tasks box, /task and the work_items tool are removed.",
   "types": "./types/index.d.ts",
   "author": {
     "name": "eascend",
@@ -13,21 +13,14 @@
   "keywords": [
     "mod",
     "pane",
-    "tasks",
     "file-tree",
     "git"
   ],
   "userConfig": {
-    "plans_dir": {
-      "type": "string",
-      "title": "Plans folder",
-      "description": "Folder name for plan files, found at or above the session's folder. One plain name, no slashes.",
-      "default": "plans"
-    },
     "open_pane": {
       "type": "string",
       "title": "Open the pane at start",
-      "description": "on opens the Workbench pane with every session; off leaves it closed until /task pane or the band's arrow.",
+      "description": "on opens the Workbench pane with every session; off leaves it closed until /workbench:task or the band's Workbench button.",
       "default": "on",
       "options": [
         "on",
